@@ -5,6 +5,7 @@ import { FeeOptimizer } from "../components/FeeOptimizer";
 import { TierCard } from "../components/TierCard";
 import { HardwareWallet } from "../components/HardwareWallet";
 import { SnapConnect } from "../components/SnapConnect";
+import BatchPlanner from "../components/BatchPlanner";
 
 export default function Dashboard() {
   const [txid, setTxid] = useState("");
@@ -70,7 +71,7 @@ export default function Dashboard() {
           ) : (
             <>
               <FeeOptimizer />
-              <HardwareWallet />
+              <BatchPlanner />
             </>
           )}
         </div>
