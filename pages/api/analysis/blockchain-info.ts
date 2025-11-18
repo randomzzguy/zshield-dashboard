@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { cacheGet, cacheSet } from "../../../lib/server/cache";
+import { initSentry, capture } from "../../../lib/server/sentry";
 export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+  initSentry();
   try {
     const cached = cacheGet<number>("latestHeight");
     if (cached && typeof cached === "number") {
@@ -22,10 +24,11 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
           cacheSet("latestHeight", h, 60000);
           return res.status(200).json({ success: true, source: "http-fallback", latestHeight: h });
         }
-      } catch {}
+      } catch (e) { capture(e); }
     }
     res.status(200).json({ success: true, source: "http-fallback", info: { error: "unavailable" } });
   } catch (e: any) {
+    capture(e);
     res.status(200).json({ success: true, source: "http-fallback", info: { error: e?.message || "error" } });
   }
 }
