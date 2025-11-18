@@ -7,17 +7,19 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     if (cached && typeof cached === "number") {
       return res.status(200).json({ success: true, source: "cache", latestHeight: cached });
     }
-    const urls = [
-      "https://api.zcha.in/v2/mainnet/blocks/latest",
-      "https://explorer.zcha.in/api/v2/mainnet/blocks/latest",
-      "https://api.zcha.in/v2/mainnet/network",
+    const candidates: Array<{ url: string; parse: (data: any) => number | null }> = [
+      { url: "https://api.zcha.in/v2/mainnet/blocks/latest", parse: (d) => d?.height ?? d?.blockHeight ?? d?.data?.height ?? null },
+      { url: "https://explorer.zcha.in/api/v2/mainnet/blocks/latest", parse: (d) => d?.height ?? d?.blockHeight ?? d?.data?.height ?? null },
+      { url: "https://api.zcha.in/v2/mainnet/network", parse: (d) => d?.chainHeight ?? d?.height ?? null },
+      { url: "https://sochain.com/api/get_info/ZEC", parse: (d) => d?.data?.blocks ?? null },
+      { url: "https://api.blockchair.com/zcash/stats", parse: (d) => d?.data?.best_block_height ?? null },
     ];
-    for (const url of urls) {
+    for (const c of candidates) {
       try {
-        const r = await axios.get(url, { timeout: 4000 });
-        const h = r.data?.height || r.data?.blockHeight || r.data?.data?.height || r.data?.chainHeight;
+        const r = await axios.get(c.url, { timeout: 5000 });
+        const h = c.parse(r.data);
         if (typeof h === "number" && h > 0) {
-          cacheSet("latestHeight", h, 30000);
+          cacheSet("latestHeight", h, 60000);
           return res.status(200).json({ success: true, source: "http-fallback", latestHeight: h });
         }
       } catch {}
