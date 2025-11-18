@@ -6,6 +6,9 @@ import { TierCard } from "../components/TierCard";
 import { HardwareWallet } from "../components/HardwareWallet";
 import { SnapConnect } from "../components/SnapConnect";
 import BatchPlanner from "../components/BatchPlanner";
+import AddressInsights from "../components/AddressInsights";
+import PremiumCTA from "../components/PremiumCTA";
+import AuthButtons from "../components/AuthButtons";
 
 export default function Dashboard() {
   const [txid, setTxid] = useState("");
@@ -72,6 +75,7 @@ export default function Dashboard() {
             <>
               <FeeOptimizer />
               <BatchPlanner />
+              <AddressInsights />
             </>
           )}
         </div>
@@ -79,8 +83,14 @@ export default function Dashboard() {
         <div className="mt-8">
           <TierCard />
         </div>
+        <div className="mt-4">
+          <AuthButtons />
+        </div>
         <div className="mt-8">
           <SnapConnect />
+        </div>
+        <div className="mt-8">
+          <PremiumCTA />
         </div>
       </div>
     </div>

@@ -17,6 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^7.120.0",
+    "@stripe/stripe-js": "^3.2.0",
+    "stripe": "^14.0.0",
     "axios": "^1.13.2",
     "next": "^16.0.3",
     "react": "^19.2.0",
