@@ -46,7 +46,9 @@ async function checkSoChain(address: string, expectedZec: number) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const addr = process.env.ZEC_PAYMENT_TADDR;
+  const addrParam = (req.query.addr || req.body?.addr) as string | undefined;
+  const envAddr = process.env.ZEC_PAYMENT_TADDR;
+  const addr = addrParam || envAddr;
   if (!addr) return res.status(400).json({ error: "zec_payment_address_missing" });
   const base = parseFloat(process.env.ZEC_PRICE_ZEC || "0.05");
   const invoiceIdRaw = (req.query.invoiceId || req.body?.invoiceId) as string;

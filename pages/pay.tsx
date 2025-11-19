@@ -12,7 +12,7 @@ export default function PayPage() {
     if (!i) return;
     setVerifying(true);
     try {
-      const r = await fetch(`/api/payments/zec/verify?invoiceId=${encodeURIComponent(i)}`);
+      const r = await fetch(`/api/payments/zec/verify?invoiceId=${encodeURIComponent(i)}&addr=${encodeURIComponent(String(addr || ""))}`);
       const j = await r.json();
       if (j?.paid) { setPaid(true); setTxid(j?.txid || null); }
     } finally {
