@@ -37,6 +37,18 @@ export default function AddressInsights() {
               </ul>
             </div>
           )}
+          <div className="pt-2 flex gap-3">
+            <a className="px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded" href={`/insights/${encodeURIComponent(addr)}`}>Open Share Page</a>
+            <button
+              className="px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded"
+              onClick={() => {
+                const link = `${window.location.origin}/insights/${encodeURIComponent(addr)}`;
+                navigator.clipboard.writeText(link);
+              }}
+            >
+              Copy Share Link
+            </button>
+          </div>
         </div>
       )}
     </div>

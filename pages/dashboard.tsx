@@ -9,6 +9,7 @@ import BatchPlanner from "../components/BatchPlanner";
 import AddressInsights from "../components/AddressInsights";
 import PremiumCTA from "../components/PremiumCTA";
 import AuthButtons from "../components/AuthButtons";
+import Watchlist from "../components/Watchlist";
 
 export default function Dashboard() {
   const [txid, setTxid] = useState("");
@@ -76,6 +77,7 @@ export default function Dashboard() {
               <FeeOptimizer />
               <BatchPlanner />
               <AddressInsights />
+              <Watchlist />
             </>
           )}
         </div>
