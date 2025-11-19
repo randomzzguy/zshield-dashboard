@@ -3,10 +3,13 @@ import { useRouter } from "next/router";
 
 export default function PayPage() {
   const router = useRouter();
-  const { i, addr, amt } = router.query as { i?: string; addr?: string; amt?: string };
+  const { i, addr, amt, uaddr } = router.query as { i?: string; addr?: string; amt?: string; uaddr?: string };
   const [verifying, setVerifying] = useState(false);
   const [paid, setPaid] = useState(false);
   const [txid, setTxid] = useState<string | null>(null);
+  const memo = `Invoice ${i ?? ""}`;
+  const recipient = (uaddr || addr || "") as string;
+  const uri = recipient && amt ? `zcash:${recipient}?amount=${amt}&memo=${encodeURIComponent(memo)}` : "";
 
   const verify = async () => {
     if (!i) return;
@@ -36,12 +39,28 @@ export default function PayPage() {
               <div className="font-mono text-xl">{amt} ZEC</div>
             </div>
             <div>
-              <div className="text-sm">To address</div>
+              <div className="text-sm">Memo (optional, helps matching)</div>
+              <div className="font-mono text-sm">Invoice {i}</div>
+              <div className="pt-1">
+                <button className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded" onClick={() => navigator.clipboard.writeText(`Invoice ${i}`)}>Copy Memo</button>
+              </div>
+            </div>
+            {uaddr ? (
+              <div>
+                <div className="text-sm">Preferred (shielded) Unified Address</div>
+                <div className="font-mono break-all">{uaddr}</div>
+              </div>
+            ) : null}
+            <div>
+              <div className="text-sm">Transparent address (auto-verified)</div>
               <div className="font-mono break-all">{addr}</div>
             </div>
             <div className="flex gap-3 pt-2">
               <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded" onClick={() => navigator.clipboard.writeText(String(addr))}>Copy Address</button>
               <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded" onClick={() => navigator.clipboard.writeText(String(amt))}>Copy Amount</button>
+              {uri ? (
+                <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded" onClick={() => { window.location.href = uri; }}>Open in Wallet</button>
+              ) : null}
               <button className="px-4 py-2 bg-maroon text-white rounded disabled:opacity-50" disabled={verifying} onClick={verify}>{verifying ? "Verifying..." : "I’ve Paid"}</button>
             </div>
             <div className="text-xs text-gray-600">We poll the blockchain every 5s to confirm your payment.</div>
