@@ -1,6 +1,7 @@
 export async function subscribeToPremium() {
-  const r = await fetch("/api/payments/now/create-invoice", { method: "POST" });
+  const r = await fetch("/api/payments/zec/create-invoice", { method: "POST" });
   const data = await r.json();
-  if (!data?.invoice_url) throw new Error("nowpayments_invoice_error");
-  window.location.href = data.invoice_url;
+  if (!data?.invoiceId || !data?.address || !data?.amountZec) throw new Error("zec_invoice_error");
+  const q = new URLSearchParams({ i: String(data.invoiceId), addr: data.address, amt: String(data.amountZec) });
+  window.location.href = `/pay?${q.toString()}`;
 }
